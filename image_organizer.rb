@@ -1,3 +1,4 @@
+require 'mini_exiftool'
 this_dir = File.expand_path(File.dirname(__FILE__))
 image_dir = File.join(this_dir,'images')
 puts "*** Finding images"
