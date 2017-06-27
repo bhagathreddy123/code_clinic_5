@@ -10,4 +10,6 @@ end
 
 # inspect images for metadata
 puts "***inspect images"
-puts images.first
+#puts images.first
+image_data = MiniExiftool.new(images.first)
+puts image_data.inspect
