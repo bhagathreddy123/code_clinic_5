@@ -9,7 +9,23 @@ images.each do |image|
 end
 
 # inspect images for metadata
-puts "***inspect images"
+# puts "***inspect images"
 #puts images.first
-image_data = MiniExiftool.new(images.first)
-puts image_data.inspect
+# image_data = MiniExiftool.new(images.first)
+#puts image_data.inspect
+# puts image_data.caption_abstract
+
+images.map! do |image|
+	filename = File.basename(image)
+
+	image_data = MiniExiftool.new(image)
+	title = image_data.caption_abstract # IPTC
+	title ||= image_data.caption         # XMP 
+	title ||= image_data.description	# PNG
+	title ||= filename.split(',').first
+
+	puts "Filename: #{filename}; Title: #{title}"
+	{:path => image, :filename => filename, :title => title}
+end
+
+puts images.inspect
