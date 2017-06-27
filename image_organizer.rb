@@ -1,4 +1,5 @@
 require 'mini_exiftool'
+require 'fileutils'
 this_dir = File.expand_path(File.dirname(__FILE__))
 image_dir = File.join(this_dir,'images')
 puts "*** Finding images"
@@ -28,4 +29,36 @@ images.map! do |image|
 	{:path => image, :filename => filename, :title => title}
 end
 
-puts images.inspect
+#puts images.inspect
+
+
+
+#create new directory
+puts "*** Organizing images"
+
+sorted_dir = File.join(this_dir, 'images_sorted')
+FileUtils.mkdir_p(sorted_dir)
+
+
+# loop through images
+
+images.each do |image_hash|
+	first_char = image_hash[:title] ?
+	image_hash[:title][0] : "0"
+	caption_dir = File.join(sorted_dir, first_char.upcase,image_hash[:title])
+	FileUtils.mkdir_p(caption_dir)
+
+	# copy image to caption named dir
+
+	old_path = File.join(this_dir,image_hash[:path])
+	new_path = File.join(caption_dir,image_hash[:filename])
+	if File.exists?(new_path)
+		puts "Skipping, already exists: #{new_path}"
+	else
+		puts "Copying image: #{new_path}"
+		FileUtils.cp(old_path,new_path)
+	end
+end
+
+
+
